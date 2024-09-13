@@ -39,7 +39,7 @@ const Home = () => {
     if (!token) {
       navigate('/email'); 
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(()=>{
     fetchUserDetails()
