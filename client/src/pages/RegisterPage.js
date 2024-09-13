@@ -54,7 +54,7 @@ const RegisterPage = () => {
 
     try {
         const response = await axios.post(URL,data)
-        console.log("response",response)
+        //console.log("response",response)
 
         toast.success(response.data.message)
 
@@ -72,7 +72,7 @@ const RegisterPage = () => {
     } catch (error) {
         toast.error(error?.response?.data?.message)
     }
-    console.log('data',data)
+    //console.log('data',data)
   }
 
 

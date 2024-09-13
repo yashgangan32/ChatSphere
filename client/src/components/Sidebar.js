@@ -6,26 +6,29 @@ import { BiLogOut } from "react-icons/bi";
 import Avatar from './Avatar'
 import { useDispatch, useSelector } from 'react-redux';
 import EditUserDetails from './EditUserDetails';
-import Divider from './Divider';
 import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from './SearchUser';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
-
+import { useSocket} from '../context/socketContext'
 const Sidebar = () => {
     const user = useSelector(state => state?.user)
     const [editUserOpen,setEditUserOpen] = useState(false)
     const [allUser,setAllUser] = useState([])
     const [openSearchUser,setOpenSearchUser] = useState(false)
-    const socketConnection = useSelector(state => state?.user?.socketConnection)
+    //const socketConnection = useSelector(state => state?.user?.socketConnection)
+    const { socket }=useSocket();
+    const socketConnection=socket;
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     useEffect(()=>{
+        
         if(socketConnection){
+
             socketConnection.emit('sidebar',user._id)
-            
+
             socketConnection.on('conversation',(data)=>{
                 //console.log('conversation',data)
                 
@@ -48,7 +51,8 @@ const Sidebar = () => {
                         }
                     }
                 })
-
+                console.log(conversationUserData);
+                
                 setAllUser(conversationUserData)
             })
         }

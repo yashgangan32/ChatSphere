@@ -7,14 +7,18 @@ import { RouterProvider } from 'react-router-dom';
 import router from './rotues';
 import { Provider } from 'react-redux'
 import { store } from './redux/store';
+import { SocketProvider } from './context/socketContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router}>
-        <App />
-      </RouterProvider>
+      <SocketProvider>
+        <RouterProvider router={router}>
+          <App />
+        </RouterProvider>
+      </SocketProvider>
+
     </Provider>
   </React.StrictMode>
 );

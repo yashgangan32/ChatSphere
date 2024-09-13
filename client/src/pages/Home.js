@@ -2,12 +2,13 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { logout, setOnlineUser, setSocketConnection, setUser } from '../redux/userSlice'
+import { logout, setOnlineUser, setUser } from '../redux/userSlice'
 import Sidebar from '../components/Sidebar'
 import logo from '../assets/logo1.png'
-import io from 'socket.io-client'
+import { useSocket } from '../context/socketContext'
 
 const Home = () => {
+  const {socket, initializeSocket } = useSocket();
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -35,7 +36,6 @@ const Home = () => {
   }
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       navigate('/email'); 
     }
@@ -48,22 +48,19 @@ const Home = () => {
 
   /***socket connection */
   useEffect(()=>{
-    const socketConnection = io(process.env.REACT_APP_BACKEND_URL,{
-      auth : {
-        token : localStorage.getItem('token')
-      },
-    })
+    const socket = initializeSocket();
+    // Listen to the 'onlineUser' event
+    socket.on('onlineUser', (data) => {
+      dispatch(setOnlineUser(data));
+      //console.log("data",data);
+    });
 
-    socketConnection.on('onlineUser',(data)=>{
-      //console.log(data)
-      dispatch(setOnlineUser(data))
-    })
 
-    dispatch(setSocketConnection(socketConnection))
-
-    return ()=>{
-      socketConnection.disconnect()
-    }
+    return () => {
+      //localStorage.removeItem('token');
+      socket.disconnect();
+    };
+    
   },[])
 
 
