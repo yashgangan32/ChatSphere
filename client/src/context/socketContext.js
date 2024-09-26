@@ -17,6 +17,7 @@ export const SocketProvider = ({ children }) => {
   // Function to initialize the socket connection
   const initializeSocket = () => {
     const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
+      transports: ['websocket', 'polling'],
       auth: {
         token: localStorage.getItem('token'),
       },
